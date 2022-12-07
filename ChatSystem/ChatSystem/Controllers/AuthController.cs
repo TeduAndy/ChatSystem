@@ -9,11 +9,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChatSystem.Controllers
 {
     [Route("api/[controller]")]
-    public class RegisterController : Controller
+    public class AuthController : Controller
     {
-        // POST api/values
+        // 登入
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Login([FromBody]string value)
+        {
+        }
+
+        // 註冊
+        [HttpPost]
+        public void Register([FromBody] string value)
         {
         }
     }
