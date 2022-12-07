@@ -12,8 +12,14 @@
 
   <ItemGroup>
     <None Remove="Controllers\" />
+    <None Remove="Models\" />
+    <None Remove="Models\Auth\" />
+    <None Remove="Models\ConnectStr\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Models\" />
+    <Folder Include="Models\Auth\" />
+    <Folder Include="Models\ConnectStr\" />
   </ItemGroup>
 </Project>
