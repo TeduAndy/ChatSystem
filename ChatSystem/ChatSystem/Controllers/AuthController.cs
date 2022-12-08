@@ -52,7 +52,7 @@ namespace ChatSystem.Controllers
                     // 已註冊返回錯誤
                     if (alreadRegister) return BadRequest("用戶已註冊！");
 
-                    // 成功則返回註冊成功
+                    // 成功則返回註冊成功 
                     return Ok("註冊成功");
                 }
             }
