@@ -10,8 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// DI 注入，獲取 application connectStr 方法一
-builder.Services.Configure<MysqlStr>(builder.Configuration.GetSection("connectStr"));
+//// DI 注入，獲取 application connectStr 方法一
+//builder.Services.Configure<MysqlStr>(builder.Configuration.GetSection("connectStr"));
 
 // DI 注入，獲取 application connectStr 方法二
 builder.Services.AddSingleton(P =>

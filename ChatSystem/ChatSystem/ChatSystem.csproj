@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="MySql.Data" Version="8.0.31" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,6 +17,8 @@
     <None Remove="Models\" />
     <None Remove="Models\Auth\" />
     <None Remove="Models\ConnectStr\" />
+    <None Remove="Dapper" />
+    <None Remove="MySql.Data" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
