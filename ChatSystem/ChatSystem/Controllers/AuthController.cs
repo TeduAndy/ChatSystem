@@ -12,7 +12,6 @@ using MySql.Data.MySqlClient;
 using System.Transactions;
 using System.Text;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ChatSystem.Controllers
 {
