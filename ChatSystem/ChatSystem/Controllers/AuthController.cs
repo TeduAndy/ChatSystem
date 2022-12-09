@@ -46,13 +46,32 @@ namespace ChatSystem.Controllers
                     // 判斷是否有打開連線，無則開啟
                     if (conn.State != ConnectionState.Open) conn.Open();
 
+                    string user = info.user;
+                    string name = info.name;
+                    string password = info.password;
+                    string email = info.email;
+                    string create_date = DateTime.Now.ToString("yyyy-MM-DD"); // 時間抓取當前時間
+                    string up_date = DateTime.Now.ToString("yyyy-MM-DD"); // 時間抓取當前時間
+
+
+                    // 查詢SQL
                     string selectStr = $@" Select user From Auth Where user = @user ";
+                    
+                    // 執行查詢
                     var alreadRegister = await conn.QueryFirstOrDefaultAsync(selectStr, new { User = info.user });
 
                     // 已註冊返回錯誤
-                    if (alreadRegister) return BadRequest("用戶已註冊！");
+                    if (!string.IsNullOrEmpty(alreadRegister)) return BadRequest("用戶已註冊！");
 
-                    // 成功則返回註冊成功 
+                    // 注入SQL
+                    string insertStr = $@" Insert Into Auth(user, name, password, email, create_date, up_date) 
+                                           Values(@user, @name, @password, @email, @create_date, @up_date)  ";
+                    // 執行注入
+                    var result = await conn.ExecuteAsync(insertStr, new { User=info.user, Name=info.name, Password=info.password
+                                                                            , Email=info.email, Create_date=info.create_date, 
+                                                                            Up_date=info.up_date});
+
+                    // 成功注入資料庫則則返回註冊成功 
                     return Ok("註冊成功");
                 }
             }
