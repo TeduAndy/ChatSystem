@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Dapper;
 using MySql.Data.MySqlClient;
+using System.Transactions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -41,6 +42,7 @@ namespace ChatSystem.Controllers
             try
             {
                 // 查詢是否已經註冊過了
+                using (var tr = new TransactionScope())
                 using (var conn = new MySqlConnection(_config.MySql))
                 {
                     // 判斷是否有打開連線，無則開啟
@@ -56,7 +58,7 @@ namespace ChatSystem.Controllers
 
                     // 查詢SQL
                     string selectStr = $@" Select user From Auth Where user = @user ";
-                    
+
                     // 執行查詢
                     var alreadRegister = await conn.QueryFirstOrDefaultAsync(selectStr, new { User = info.user });
 
@@ -64,12 +66,43 @@ namespace ChatSystem.Controllers
                     if (!string.IsNullOrEmpty(alreadRegister)) return BadRequest("用戶已註冊！");
 
                     // 注入SQL
-                    string insertStr = $@" Insert Into Auth(user, name, password, email, create_date, up_date) 
-                                           Values(@user, @name, @password, @email, @create_date, @up_date)  ";
-                    // 執行注入
-                    var result = await conn.ExecuteAsync(insertStr, new { User=info.user, Name=info.name, Password=info.password
-                                                                            , Email=info.email, Create_date=info.create_date, 
-                                                                            Up_date=info.up_date});
+                    try
+                    {
+                        //string insertStr = $@" Insert Into Auth(user, name, password, email, create_date, up_date) 
+                        //                   Values(@user, @name, @password, @email, @create_date, @up_date)  ";
+                        string sql = $@" Insert Into Auth(user, name, password, email, create_date, up_date)
+                                           Values('2', @name, @password, @email, @create_date, @up_date)  ";
+                        var result = await conn.ExecuteAsync(sql, new
+                        {
+                            User = 1,
+                            Name = info.name,
+                            Password = info.password,
+                            Email = info.email,
+                            Create_date = info.create_date,
+                            Up_date = info.up_date
+                        });
+
+                        //string insertStr = $@" Insert Into Auth(user, name, password, email, create_date, up_date) 
+                        //                   Values(1, @name, @password, @email, @create_date, @up_date)  ";
+                        string insertStr = "asdafaf";
+                        // 執行注入
+                        result = await conn.ExecuteAsync(insertStr, new
+                        {
+                            User = 1,
+                            Name = info.name,
+                            Password = info.password,
+                            Email = info.email,
+                            Create_date = info.create_date,
+                            Up_date = info.up_date
+                        });
+                        tr.Complete();
+                    }
+                    catch (Exception)
+                    {
+                        //tr.Rollback(); // 失敗則回滾資料
+                        return BadRequest("創建失敗");
+                    }
+
 
                     // 成功注入資料庫則則返回註冊成功 
                     return Ok("註冊成功");
