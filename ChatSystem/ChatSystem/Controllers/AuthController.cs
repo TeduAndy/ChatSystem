@@ -30,8 +30,33 @@ namespace ChatSystem.Controllers
 
         // 登入
         [HttpPost]
-        public async Task<ActionResult> Login()
+        public async Task<ActionResult> Login(LoginDto info)
         {
+            string user = info.user;
+            string password = Convert.ToBase64String(Encoding.UTF8.GetBytes(info.password)); // 將明文轉成 base64 字串
+
+            string sql = @" Select user, password From Auth Where user = @user And password = @password ";
+
+            try
+            {
+                using (var conn = new MySqlConnection(_config.MySql))
+                {
+                    // 找出是否有此用戶
+                    LoginDto result = await conn.QueryFirstOrDefaultAsync<LoginDto>(sql, new { user, password });
+
+                    // 無的話返回找不到用戶
+                    if (result == null) return NotFound("查無此用戶");
+
+                    // 有的話則返回 Token(JWT)
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("出現異常錯誤");
+            }
+
+
+
             return Ok("");
         }
 
