@@ -33,6 +33,7 @@ namespace ChatSystem.Controllers
         }
 
         // 登入
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> Login(LoginDto info)
         {
@@ -45,6 +46,9 @@ namespace ChatSystem.Controllers
             {
                 using (var conn = new MySqlConnection(_config.MySql))
                 {
+                    // 打開連線
+                    if(conn.State != ConnectionState.Open) conn.Open();
+
                     // 找出是否有此用戶
                     LoginDto result = await conn.QueryFirstOrDefaultAsync<LoginDto>(sql, new { user, password });
 
@@ -64,6 +68,7 @@ namespace ChatSystem.Controllers
         }
 
         // 註冊
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> Register(RegisterDto info)
         {
@@ -110,6 +115,15 @@ namespace ChatSystem.Controllers
             {
                 return BadRequest("資料處理出現問題，註冊失敗");
             }
+        }
+
+        // 修改
+        [Authorize]
+        [HttpPut]
+        public async Task<ActionResult> UpdateInfo(UpdateDto info)
+        {
+            var a = User.Identity.Name;
+            return Ok("OK");
         }
     }
 }

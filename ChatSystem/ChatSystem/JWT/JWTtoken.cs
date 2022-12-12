@@ -32,7 +32,7 @@ namespace ChatSystem.JWT
             ClaimsIdentity userClaimsIdentity = new ClaimsIdentity(claims);
 
             // 為 token 產生 key
-            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.key));
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
 
             // 將 SymmetricSecurityKey 轉成 HAS256
             SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
