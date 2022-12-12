@@ -11,7 +11,9 @@ using Dapper;
 using MySql.Data.MySqlClient;
 using System.Transactions;
 using System.Text;
-
+using Microsoft.AspNetCore.Authorization;
+using ChatSystem.Models.JWT;
+using ChatSystem.JWT;
 
 namespace ChatSystem.Controllers
 {
@@ -20,12 +22,14 @@ namespace ChatSystem.Controllers
     public class AuthController : Controller
     {
         // connectStr 獲取
-        private MysqlStr _config;
+        private readonly MysqlStr _config;
+        private readonly JwtDto _jwt;
 
         // 建構值設定
-        public AuthController(MysqlStr config)
+        public AuthController(MysqlStr config, IOptions<JwtDto> jwt)
         {
             _config = config;
+            _jwt = jwt.Value;
         }
 
         // 登入
@@ -48,16 +52,15 @@ namespace ChatSystem.Controllers
                     if (result == null) return NotFound("查無此用戶");
 
                     // 有的話則返回 Token(JWT)
+                    string token = await JWTtoken.createToken(_jwt, result.user);
+
+                    return Ok(token);
                 }
             }
             catch (Exception ex)
             {
                 return BadRequest("出現異常錯誤");
             }
-
-
-
-            return Ok("");
         }
 
         // 註冊

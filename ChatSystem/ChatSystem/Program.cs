@@ -1,4 +1,5 @@
 ﻿using ChatSystem.Models.ConnectStr;
+using ChatSystem.Models.JWT;
 using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,10 +11,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//// DI 注入，獲取 application connectStr 方法一
-//builder.Services.Configure<MysqlStr>(builder.Configuration.GetSection("connectStr"));
+//// DI 注入，獲取 application token (IOption)
+builder.Services.Configure<JwtDto>(builder.Configuration.GetSection("JWT"));
 
-// DI 注入，獲取 application connectStr 方法二
+// DI 注入，獲取 application connectStr (組態物件)
 builder.Services.AddSingleton(P =>
 {
     MysqlStr connectStr = new MysqlStr();
