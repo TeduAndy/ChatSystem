@@ -118,11 +118,10 @@ namespace ChatSystem.Controllers
         }
 
         // 修改
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [HttpPut]
         public async Task<ActionResult> UpdateInfo(UpdateDto info)
         {
-            var a = User.Identity.Name;
             return Ok("OK");
         }
     }
