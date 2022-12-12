@@ -118,7 +118,7 @@ namespace ChatSystem.Controllers
         }
 
         // 修改
-        [Authorize(Roles = "admin")]
+        [Authorize]
         [HttpPut]
         public async Task<ActionResult> UpdateInfo(UpdateDto info)
         {
