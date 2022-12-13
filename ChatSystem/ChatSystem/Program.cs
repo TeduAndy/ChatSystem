@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using ChatSystem.Hubs;
 using Org.BouncyCastle.Asn1.Cmp;
 using System.Text;
 
@@ -16,6 +17,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// 這裡要啟用 SignalR 服務
+builder.Services.AddSignalR();
 
 //// DI 注入，獲取 application token (IOption)
 builder.Services.Configure<JwtDto>(builder.Configuration.GetSection("JWT"));
@@ -112,6 +116,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// SigalR 註冊 Hub 路由。
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
 
